@@ -1,0 +1,151 @@
+Create and manage NoSQL Databases with Cassandra
+
+
+--1) Create Table emp;
+
+create table emp( emp_id int, name text, city text, designation text, experience float, primary key(emp_id));
+
+--2.	Perform following operations on created table:
+--a.	Insert rows 
+insert into emp(emp_id, name, city, designation, experience) values( 101, 'Ashwith Bhatt', 'Kolhapur', 'SDE', 5);
+insert into emp(emp_id, name, city, designation, experience) values(102, 'Harnish Savsani', 'Kolhapur', 'Designer', 4);
+insert into emp(emp_id, name, city, designation, experience) values(103, 'Suraj Patil', 'Satara', 'Java Developer', 3);
+insert into emp(emp_id, name, city, designation, experience) values(104, 'Pranav Kulkarni', 'Nashik','Python Developer', 6);
+
+select * from emp;
+
+ emp_id | city     | designation      | experience | name
+--------+----------+------------------+------------+-----------------
+    104 |   Nashik | Python Developer |          6 | Pranav Kulkarni
+    102 | Kolhapur |         Designer |          4 | Harnish Savsani
+    101 | Kolhapur |              SDE |          5 |   Ashwith Bhatt
+    103 |   Satara |   Java Developer |          3 |     Suraj Patil
+
+--------------------------------------------------------------------------------------------------------------
+--b.	Update rows
+update emp set city = 'Peth Vadgaon' where emp_id = 101;
+select * from emp;
+
+ emp_id | city         | designation      | experience | name
+--------+--------------+------------------+------------+-----------------
+    104 |       Nashik | Python Developer |          6 | Pranav Kulkarni
+    102 |     Kolhapur |         Designer |          4 | Harnish Savsani
+    101 | Peth Vadgaon |              SDE |          5 |   Ashwith Bhatt
+    103 |       Satara |   Java Developer |          3 |     Suraj Patil
+
+---------------------------------------------------------------------------------------------------------------
+--c.	Update rows with upsert
+update emp set designation = 'ReactJs Developer' where emp_id = 103;
+
+select * from emp;
+
+ emp_id | city         | designation       | experience | name
+--------+--------------+-------------------+------------+-----------------
+    104 |       Nashik |  Python Developer |          6 | Pranav Kulkarni
+    102 |     Kolhapur |          Designer |          4 | Harnish Savsani
+    101 | Peth Vadgaon |               SDE |          5 |   Ashwith Bhatt
+    103 |       Satara | ReactJs Developer |          3 |     Suraj Patil
+
+----------------------------------------------------------------------------------------------------------------
+--d.	Retrieve data from table
+select * from emp;
+
+ emp_id | city         | designation       | experience | name
+--------+--------------+-------------------+------------+-----------------
+    104 |       Nashik |  Python Developer |          6 | Pranav Kulkarni
+    102 |     Kolhapur |          Designer |          4 | Harnish Savsani
+    101 | Peth Vadgaon |               SDE |          5 |   Ashwith Bhatt
+    103 |       Satara | ReactJs Developer |          3 |     Suraj Patil
+
+-----------------------------------------------------------------------------------------------------------------
+--e.	Alter table add columns ((email set<text>, expertise list<text>, prev_jobs map<text, int>);
+
+alter table emp add(email set<text>, expertise list<text>, prev_jobs map<text, int>);
+ select * from emp;
+
+ emp_id | city         | designation       | email | experience | expertise | name            | prev_jobs
+--------+--------------+-------------------+-------+------------+-----------+-----------------+-----------
+    104 |       Nashik |  Python Developer |  null |          6 |      null | Pranav Kulkarni |      null
+    102 |     Kolhapur |          Designer |  null |          4 |      null | Harnish Savsani |      null
+    101 | Peth Vadgaon |               SDE |  null |          5 |      null |   Ashwith Bhatt |      null
+    103 |       Satara | ReactJs Developer |  null |          3 |      null |     Suraj Patil |      null
+
+-----------------------------------------------------------------------------------------------------------------
+
+--f.	Insert new rows
+
+insert into emp(emp_id, name, city, designation, experience, email, expertise, prev_jobs) 
+values(105, 'Pundalik Masurkar', 'Kolhapur', 'Angular Js', 5, {'pundalik@gmail.com', 'masurkar@gmail.com'}, ['React', 'Next'], {'Capegemini':5,'TCS':2});
+
+select * from emp;
+ emp_id | city         | designation       | email                                        | experience | expertise         | name              | prev_jobs
+--------+--------------+-------------------+----------------------------------------------+------------+-------------------+-------------------+-----------------------------
+    105 |     Kolhapur |        Angular Js | {'masurkar@gmail.com', 'pundalik@gmail.com'} |          5 | ['React', 'Next'] | Pundalik Masurkar | {'Capegemini': 5, 'TCS': 2}
+    104 |       Nashik |  Python Developer |                                         null |          6 |              null |   Pranav Kulkarni |                        null
+    102 |     Kolhapur |          Designer |                                         null |          4 |              null |   Harnish Savsani |                        null
+    101 | Peth Vadgaon |               SDE |                                         null |          5 |              null |     Ashwith Bhatt |                        null
+    103 |       Satara | ReactJs Developer |                                         null |          3 |              null |       Suraj Patil |                        null
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+--g.	Delete rows and values
+delete from emp where emp_id = 105;
+select * from emp;
+
+ emp_id | city         | designation       | email | experience | expertise | name            | prev_jobs
+--------+--------------+-------------------+-------+------------+-----------+-----------------+-----------
+    104 |       Nashik |  Python Developer |  null |          6 |      null | Pranav Kulkarni |      null
+    102 |     Kolhapur |          Designer |  null |          4 |      null | Harnish Savsani |      null
+    101 | Peth Vadgaon |               SDE |  null |          5 |      null |   Ashwith Bhatt |      null
+    103 |       Satara | ReactJs Developer |  null |          3 |      null |     Suraj Patil |      null
+
+delete name from emp where emp_id=104;
+ select * from emp;
+
+ emp_id | city         | designation       | email | experience | expertise | name            | prev_jobs
+--------+--------------+-------------------+-------+------------+-----------+-----------------+-----------
+    104 |       Nashik |  Python Developer |  null |          6 |      null |            null |      null
+    102 |     Kolhapur |          Designer |  null |          4 |      null | Harnish Savsani |      null
+    101 | Peth Vadgaon |               SDE |  null |          5 |      null |   Ashwith Bhatt |      null
+    103 |       Satara | ReactJs Developer |  null |          3 |      null |     Suraj Patil |      null
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+--4) Create Table product;
+ create table product(id uuid,name text,price float,quan int,primary key(id));
+
+--5.	Perform following operations on created table:
+--a.	Insert rows 
+insert into product(id, name, price, quan) values(uuid(), 'laptop', 10000, 50);
+insert into product(id, name, price, quan) values(uuid(), 'mouse', 3000, 40);
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+--b.	Alter table product add (inv_date timestamp, available boolean);
+Alter table product add(inv_date timestamp, available boolean);
+
+id                                   | available | inv_date | name   | price | quan
+--------------------------------------+-----------+----------+--------+-------+------
+ 71e68dfc-19d2-49eb-9f7e-0c95d81f4f92 |      null |     null | laptop | 10000 |   50
+ 81f66061-eb30-4e02-9067-c5a6b5d31b4a |      null |     null |  mouse |  3000 |   40
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+--c.	Insert new rows
+ insert into product(id, name, price, quan, inv_date, available) values(uuid(), 'TV', 30000, 50, '2022-02-03 04:05+0000', true);
+
+ select * from product ;
+ id                                   | available | inv_date                        | name   | price | quan
+--------------------------------------+-----------+---------------------------------+--------+-------+------
+ 71e68dfc-19d2-49eb-9f7e-0c95d81f4f92 |      null |                            null | laptop | 10000 |   50
+ 44ceec98-c06f-46ac-a30f-31eae42fa444 |      True | 2022-02-03 04:05:00.000000+0000 |     TV | 30000 |   50
+ 81f66061-eb30-4e02-9067-c5a6b5d31b4a |      null |                            null |  mouse |  3000 |   40
+
+
+
+
+
+
+
+
+
+
+
